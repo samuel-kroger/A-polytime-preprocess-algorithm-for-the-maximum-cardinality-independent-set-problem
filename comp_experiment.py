@@ -84,7 +84,7 @@ class problem_instance(object):
 				simplicial_fixings = self.compuete_maximum_independent_set_of_simplicial_nodes()
 				print(simplicial_fixings)
 				for node in simplicial_fixings:
-					number_fixed += 1
+					number_fixed += 1 + len(list(self.graph.neighbors(node)))
 					#for neighbor in self.graph.neighbors(node):
 					neighbors = list(self.graph.neighbors(node))
 
@@ -152,7 +152,7 @@ class problem_instance(object):
 		if not os.path.exists('./results.csv'):
 			with open('./results.csv', 'w') as csvfile:
 				writer = csv.writer(csvfile, delimiter=',')
-				writer.writerow(['Instance', 'method', 'lower bound', 'upper bound', 'root relaxation', 'total_time', 'method_time', 'number of simplicial nodes fixed', 'number of iterations'])
+				writer.writerow(['Instance', 'method', 'lower bound', 'upper bound', 'root relaxation', 'total_time', 'method_time', 'number nodes fixed', 'number of iterations'])
 
 		with open('./results.csv', 'a') as csvfile:
 			writer = csv.writer(csvfile, delimiter=',')
@@ -223,7 +223,7 @@ for file in os.listdir('./data'):
 
 
 
-#input_files = ['./data/CA-CondMat.txt']
+#input_files = ['soc-karate.mtx']
 
 
 
