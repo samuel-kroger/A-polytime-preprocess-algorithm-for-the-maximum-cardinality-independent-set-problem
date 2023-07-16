@@ -12,17 +12,17 @@ class problem_instance(object):
 	
 	def __init__(self, input_filename):
 
-		self.filename = input_file[7:]
+		self.filename = input_filename
 
-		self.graph = self.read_graph(input_filename)
+		self.graph = self.read_graph(self.filename)
 		self.n = len(self.graph.nodes())
 		self.m = len(self.graph.edges())
 		self.graph_density = float_to_str(nx.density(self.graph))
 
-		self.MIP_time_limit = 3600
+		self.MIP_time_limit = 3* 3600
 
 	def read_graph(self, fname):
-
+		fname = './data/' + fname
 		if fname.endswith('mtx'):
 			edges = []
 
@@ -40,7 +40,8 @@ class problem_instance(object):
 			graph = nx.read_adjlist(fname)
 
 		graph.remove_edges_from(nx.selfloop_edges(graph))
-		graph.remove_nodes_from(list(nx.isolates(graph)))
+		#graph.remove_nodes_from(list(nx.isolates(graph)))
+		graph = nx.convert_node_labels_to_integers(graph, ordering='sorted')
 
 		#print(nx.info(graph))
 
@@ -81,6 +82,7 @@ class problem_instance(object):
 			number_fixed = 0
 			while simplicial_fixings != []:
 				simplicial_fixings = self.compuete_maximum_independent_set_of_simplicial_nodes()
+				print(simplicial_fixings)
 				for node in simplicial_fixings:
 					number_fixed += 1
 					#for neighbor in self.graph.neighbors(node):
@@ -159,7 +161,7 @@ class problem_instance(object):
 	def make_row(self, method):
 		instance.get_root_relaxtaion(method)
 		if method == 'recursive_simplicial':
-			self.graph = nx.read_adjlist('./data/' + self.filename)
+			self.graph = self.read_graph(self.filename)
 		instance.compuete_maximum_independent_set(method, False)
 		
 		instance.write_results(method)
@@ -217,7 +219,7 @@ for file in os.listdir('./data'):
 	if file in skip_files:
 		continue
 
-	input_files.append('./data/' + file)
+	input_files.append(file)
 
 
 
@@ -227,13 +229,15 @@ for file in os.listdir('./data'):
 
 
 for input_file in input_files:
-	print(input_file)
+	
 	instance = problem_instance(input_file)
-	
 	print('Instance name: ' + instance.filename)
+	#print(nx.is_directed(instance.graph))
 	
-	#instance.write_graph_info()
+	
+	instance.write_graph_info()
 	instance.calculate_results()
+	#instance.compuete_maximum_independent_set(True, False)
 	
 
 '''
