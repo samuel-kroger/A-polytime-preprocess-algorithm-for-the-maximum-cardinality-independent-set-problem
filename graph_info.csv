@@ -1,7 +1,0 @@
-Instance,number of nodes,number of edges,density
-siemens1.txt,29710,43524,0.00
-MANN-a81.mtx,3321,5506380,1.00
-p-hat1500-3.mtx,1500,847244,0.75
-C4000-5.mtx,4000,4000268,0.50
-hamming10-2.mtx,1024,518656,0.99
-keller6.mtx,3361,4619898,0.82
