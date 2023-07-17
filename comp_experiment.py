@@ -1,5 +1,6 @@
 import networkx as nx
 import gurobipy as gp
+import matplotlib.pyplot as plt
 import time
 import csv
 import os
@@ -78,18 +79,7 @@ class problem_instance(object):
 
 		if method == 'recursive_simplicial':
 			method_time_start = time.time()
-			simplicial_fixings = 'while loop start'
-			number_fixed = 0
-			while simplicial_fixings != []:
-				simplicial_fixings = self.compuete_maximum_independent_set_of_simplicial_nodes()
-				print(simplicial_fixings)
-				for node in simplicial_fixings:
-					number_fixed += 1 + len(list(self.graph.neighbors(node)))
-					#for neighbor in self.graph.neighbors(node):
-					neighbors = list(self.graph.neighbors(node))
-
-					self.graph.remove_nodes_from(neighbors)
-					self.graph.remove_node(node)
+			simplicial_fixings, number_fixed = self.recursive_fixing()
 			method_time_end = time.time()
 			
 			
@@ -139,10 +129,26 @@ class problem_instance(object):
 		if method == 'recursive_simplicial':
 			self.lower_bound += number_fixed
 			self.upper_bound += number_fixed
+			self.graph = self.read_graph(self.filename)
 		self.total_time = float_to_str(end_time - start_time)
 		#self.method_time = float_to_str(method_time_end - method_time_start)
 
 		#return len(max_independent_set), number_of_simplicial_fixings, float_to_str(end_time-start_time)
+
+	def recursive_fixing(self):
+		simplicial_fixings = ['while loop start']
+		number_fixed = 0
+		while simplicial_fixings[-1] != []:
+			simplicial_fixings.append(self.compuete_maximum_independent_set_of_simplicial_nodes())
+
+			for node in simplicial_fixings[-1]:
+				number_fixed += 1 + len(list(self.graph.neighbors(node)))
+				#for neighbor in self.graph.neighbors(node):
+				neighbors = list(self.graph.neighbors(node))
+
+				self.graph.remove_nodes_from(neighbors)
+				self.graph.remove_node(node)
+		return simplicial_fixings, number_fixed
 
 	def get_root_relaxtaion(self, method):
 		self.compuete_maximum_independent_set(method, True)
@@ -159,11 +165,9 @@ class problem_instance(object):
 			writer.writerow([self.filename, method, self.lower_bound, self.upper_bound, self.root_relaxation, self.total_time, self.method_time, self.number_of_simplicial_fixings, self.number_of_simplicial_iterations])
 
 	def make_row(self, method):
-		instance.get_root_relaxtaion(method)
-		if method == 'recursive_simplicial':
-			self.graph = self.read_graph(self.filename)
-		instance.compuete_maximum_independent_set(method, False)
 		
+		instance.get_root_relaxtaion(method)
+		instance.compuete_maximum_independent_set(method, False)
 		instance.write_results(method)
 
 	def calculate_results(self):
@@ -184,6 +188,70 @@ class problem_instance(object):
 		with open('./graph_info.csv', 'a') as csvfile:
 			writer = csv.writer(csvfile, delimiter=',')
 			writer.writerow([self.filename, self.n, self.m, self.graph_density])
+
+	def plot_fixings(self):
+		self.number_of_simplicial_iterations = 0
+		simplicial_fixings, number_of_simplicial_fixings = self.recursive_fixing()
+		simplicial_fixings = simplicial_fixings[1:]
+		self.graph = self.read_graph(self.filename)
+
+		
+		nodes = list(self.graph.nodes())
+		pos = nx.spring_layout(self.graph, seed=1)  # positions for all nodes
+
+		counter = 1
+		for fixed_nodes in simplicial_fixings:
+			neighbor_nodes = []
+			for node in fixed_nodes:
+				for potential_neighbor_node in self.graph.neighbors(node):
+					if potential_neighbor_node in nodes:
+						neighbor_nodes.append(potential_neighbor_node)
+				
+				nodes.remove(node)
+			#for node in neighbor_nodes:	
+			#	if node in nodes:
+			#		nodes.remove(node)
+
+			options = {"edgecolors": "tab:gray", "node_size": 30, "alpha": 0.9}
+
+			fig, axes = plt.subplots(nrows=2, ncols=1)
+			ax = axes.flatten()
+			plt.title('super test')
+			ax[0].set_axis_off()
+			ax[1].set_axis_off()
+			ax[0].set_title('Computing independent set of simplicials')
+			ax[1].set_title('Removing the independent set of simplicials and their neighbors')
+
+			nx.draw_networkx_nodes(nodes, pos, node_color="tab:blue", **options, ax=ax[0])
+			nx.draw_networkx_nodes(fixed_nodes, pos, node_color="tab:red", **options, ax=ax[0])
+			nx.draw_networkx_nodes(neighbor_nodes, pos, node_color="tab:olive", **options, ax=ax[0])
+			subgraph = self.graph.subgraph(nodes + fixed_nodes)
+			nx.draw_networkx_edges(subgraph, pos, width=1.0, alpha=0.5, ax=ax[0])
+			
+			plt.tight_layout()
+			#plt.axis("off",ax=ax[0])
+			#plt.title(self.filename + ' ONE')
+			
+			#plt.savefig('./images/network_' + self.filename + '.png')
+			#plt.show()
+			
+			for node in neighbor_nodes:
+				if node in nodes:
+					nodes.remove(node)
+
+			nx.draw_networkx_nodes(nodes, pos, node_color="tab:blue", **options, ax=ax[1])
+			#nx.draw_networkx_nodes(fixed_nodes, pos, node_color="tab:red", **options)
+			#nx.draw_networkx_nodes(neighbor_nodes, pos, node_color="tab:olive", **options)
+			subgraph = self.graph.subgraph(nodes)
+			nx.draw_networkx_edges(subgraph, pos, width=1.0, alpha=0.5, ax=ax[1])
+			
+			plt.tight_layout()
+			#plt.axis("off",ax=ax[1])
+			#plt.title(self.filename + ' TWO')
+
+			#plt.show()
+			plt.savefig('images/' + self.filename[:-4] + '_iteration_' + str(counter) + '.png')
+			counter += 1
 
 def float_to_str(float):
 	return '{:.2f}'.format(float)
@@ -223,7 +291,7 @@ for file in os.listdir('./data'):
 
 
 
-#input_files = ['soc-karate.mtx']
+input_files = ['soc-karate.mtx']
 
 
 
@@ -234,9 +302,10 @@ for input_file in input_files:
 	print('Instance name: ' + instance.filename)
 	#print(nx.is_directed(instance.graph))
 	
-	
-	instance.write_graph_info()
-	instance.calculate_results()
+	instance.plot_fixings()
+	#instance.write_graph_info()
+	#instance.calculate_results()
+
 	#instance.compuete_maximum_independent_set(True, False)
 	
 
