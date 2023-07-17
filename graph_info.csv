@@ -1,6 +1,5 @@
 Instance,number of nodes,number of edges,density
-soc-karate.mtx,34,78,0.14
-soc-karate.mtx,34,78,0.14
-soc-karate.mtx,34,78,0.14
-soc-karate.mtx,34,78,0.14
-soc-karate.mtx,34,78,0.14
+Brightkite_edges.txt,58228,214078,0.00
+C4000-5.mtx,4000,4000268,0.50
+CA-CondMat.txt,23133,93439,0.00
+CA-HepPh.txt,12008,118489,0.00
