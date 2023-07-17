@@ -291,7 +291,7 @@ for file in os.listdir('./data'):
 
 
 
-input_files = ['soc-karate.mtx']
+#input_files = ['soc-karate.mtx']
 
 
 
@@ -302,9 +302,9 @@ for input_file in input_files:
 	print('Instance name: ' + instance.filename)
 	#print(nx.is_directed(instance.graph))
 	
-	instance.plot_fixings()
-	#instance.write_graph_info()
-	#instance.calculate_results()
+	#instance.plot_fixings()
+	instance.write_graph_info()
+	instance.calculate_results()
 
 	#instance.compuete_maximum_independent_set(True, False)
 	
