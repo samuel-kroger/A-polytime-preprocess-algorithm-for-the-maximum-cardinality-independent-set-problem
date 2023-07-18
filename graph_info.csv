@@ -1,0 +1,14 @@
+Instance,number of nodes,number of edges,density
+Brightkite_edges.txt,58228,214078,0.00
+C4000-5.mtx,4000,4000268,0.50
+CA-CondMat.txt,23133,93439,0.00
+Gowalla_edges.txt,196591,950327,0.00
+Wiki-Vote.graph.txt,7117,100763,0.00
+ca-citeseer.mtx,227320,814134,0.00
+com-dblp.ungraph.txt,317080,1049866,0.00
+com-youtube.ungraph.txt,1134890,2987624,0.00
+facebook_combined.txt,4039,88234,0.01
+flickrEdges.txt,105938,2316948,0.00
+keller6.mtx,3361,4619898,0.82
+p-hat1500-3.mtx,1500,847244,0.75
+smallworld.graph.txt,100002,499999,0.00
