@@ -127,8 +127,9 @@ class problem_instance(object):
 		self.upper_bound = m.getAttr(gp.GRB.Attr.ObjBound)
 
 		if method == 'recursive_simplicial':
-			self.lower_bound += number_fixed
-			self.upper_bound += number_fixed
+			if not relax:
+				self.lower_bound += number_fixed
+				self.upper_bound += number_fixed
 			self.graph = self.read_graph(self.filename)
 		self.total_time = float_to_str(end_time - start_time)
 		#self.method_time = float_to_str(method_time_end - method_time_start)
