@@ -38,15 +38,13 @@ class problem_instance(object):
 			graph.add_edges_from(edges, nodetype=int)
 
 		else:
-			#graph = nx.read_edgelist(fname, nodetype=int, data=(("Type", str),))
-			#graph = nx.read_edgelist(fname, nodetype=int)
+			
 			graph = nx.read_adjlist(fname)
 
 		graph.remove_edges_from(nx.selfloop_edges(graph))
-		#graph.remove_nodes_from(list(nx.isolates(graph)))
+		
 		graph = nx.convert_node_labels_to_integers(graph, ordering='sorted')
 
-		#print(nx.info(graph))
 
 		return graph
 
@@ -84,26 +82,6 @@ class problem_instance(object):
 			simplicial_fixings, number_fixed = self.recursive_fixing()
 			simplicial_fixings = simplicial_fixings[1:]
 			simplicial_fixings = [element for sublist in simplicial_fixings for element in sublist]
-			#simplicial_fixings = simplicial_fixings[1:]
-			#print(simplicial_fixings)
-			#simplicial_fixings = list(set(simplicial_fixings))
-
-			#print(len(simplicial_fixings))
-			#print(simplicial_fixings)
-			#print(number_fixed)
-			#print("AAAAAAAAAa")
-			#flag = 0
-			 
-			# using set() + len()
-			# to check all unique list elements
-			#flag = len(set(simplicial_fixings)) == len(simplicial_fixings)
-			 
-			 
-			# printing result
-			#if(flag):
-			#	print("List contains all unique elements")
-			#else:
-			#	print("List contains does not contains all unique elements")
 			method_time_end = time.time()
 			
 			
@@ -136,10 +114,6 @@ class problem_instance(object):
 		m.setObjective(gp.quicksum(m._X), gp.GRB.MAXIMIZE)
 		m.addConstrs(m._X[i] + m._X[j] <= 1 for (i,j) in self.graph.edges())
 
-		#if relax:
-		#	t = m.relax()
-		#	t.optimize()
-		#	m.update()
 		m.optimize()
 
 		max_independent_set = []
@@ -151,13 +125,11 @@ class problem_instance(object):
 
 		if method == 'recursive_simplicial':
 			if not relax:
-				self.lower_bound += self.number_of_simplicial_fixings
-				self.upper_bound += self.number_of_simplicial_fixings
+				self.lower_bound += len(simplicial_fixings)
+				self.upper_bound += len(simplicial_fixings)
 			self.graph = self.read_graph(self.filename)
 		self.total_time = float_to_str(end_time - start_time)
-		#self.method_time = float_to_str(method_time_end - method_time_start)
-
-		#return len(max_independent_set), number_of_simplicial_fixings, float_to_str(end_time-start_time)
+		
 
 	def recursive_fixing(self):
 		simplicial_fixings = ['while loop start']
@@ -167,7 +139,6 @@ class problem_instance(object):
 
 			for node in simplicial_fixings[-1]:
 				number_fixed += 1 + len(list(self.graph.neighbors(node)))
-				#for neighbor in self.graph.neighbors(node):
 				neighbors = list(self.graph.neighbors(node))
 
 				self.graph.remove_nodes_from(neighbors)
@@ -196,10 +167,10 @@ class problem_instance(object):
 		instance.write_results(method)
 
 	def calculate_results(self):
-		#method = 'none'
-		#self.make_row(method)
-		#method = 'one_step_simplicial'
-		#self.make_row(method)
+		method = 'none'
+		self.make_row(method)
+		method = 'one_step_simplicial'
+		self.make_row(method)
 		method = 'recursive_simplicial'
 		self.make_row(method)
 
@@ -329,12 +300,9 @@ def find_simplicials(graph):
 
 
 input_files = []
-skip_files = []
 
 for file in os.listdir('./data'):
-	if file in skip_files:
-		continue
-
+	
 	input_files.append(file)
 
 
@@ -348,26 +316,8 @@ for input_file in input_files:
 	
 	instance = problem_instance(input_file)
 	print('Instance name: ' + instance.filename)
-	#print(nx.is_directed(instance.graph))
 	
-	#print(nx.is_chordal(instance.graph))
+
 	#instance.plot_fixings()
-	#instance.write_graph_info()
+	instance.write_graph_info()
 	instance.calculate_results()
-
-
-	#instance.compuete_maximum_independent_set('recursive_simplicial', False)
-	#instance.compuete_maximum_independent_set('none', False)
-
-'''
-for input_file in input_files:
-	print(input_file)
-	
-	graph = nx.read_adjlist(input_file)
-	#print(len(graph.nodes()))
-	
-	
-		writer.writerow([input_file[6:], max_independent_set, number_of_simplicial_fixings, run_time])
-		max_independent_set, number_of_simplicial_fixings, run_time = maximum_independent_set(graph, True)
-		writer.writerow([input_file[6:], max_independent_set, number_of_simplicial_fixings, run_time])
-'''
