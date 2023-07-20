@@ -186,7 +186,8 @@ class problem_instance(object):
 
 		with open('./results.csv', 'a') as csvfile:
 			writer = csv.writer(csvfile, delimiter=',')
-			writer.writerow([self.filename, method, self.lower_bound, self.upper_bound, self.root_relaxation, self.total_time, self.method_time, self.number_of_simplicial_fixings, self.number_of_simplicial_iterations])
+			#writer.writerow([self.filename, method, self.lower_bound, self.upper_bound, self.root_relaxation, self.total_time, self.method_time, self.number_of_simplicial_fixings, self.number_of_simplicial_iterations])
+			writer.writerow([self.filename, method, self.lower_bound, self.upper_bound, 'root_relaxation', self.total_time, self.method_time, self.number_of_simplicial_fixings, self.number_of_simplicial_iterations])
 
 	def make_row(self, method):
 		
@@ -195,10 +196,10 @@ class problem_instance(object):
 		instance.write_results(method)
 
 	def calculate_results(self):
-		method = 'none'
-		self.make_row(method)
-		method = 'one_step_simplicial'
-		self.make_row(method)
+		#method = 'none'
+		#self.make_row(method)
+		#method = 'one_step_simplicial'
+		#self.make_row(method)
 		method = 'recursive_simplicial'
 		self.make_row(method)
 
@@ -305,7 +306,6 @@ def float_to_str(float):
 	return '{:.2f}'.format(float)
 
 
-
 def find_simplicials(graph):
 			
 	simplicial_dict = {}
@@ -339,7 +339,7 @@ for file in os.listdir('./data'):
 
 
 
-input_files = ['soc-karate.mtx']
+#input_files = ['soc-karate.mtx']
 
 
 
@@ -352,8 +352,8 @@ for input_file in input_files:
 	
 	#print(nx.is_chordal(instance.graph))
 	#instance.plot_fixings()
-	instance.write_graph_info()
-	#instance.calculate_results()
+	#instance.write_graph_info()
+	instance.calculate_results()
 
 
 	#instance.compuete_maximum_independent_set('recursive_simplicial', False)
