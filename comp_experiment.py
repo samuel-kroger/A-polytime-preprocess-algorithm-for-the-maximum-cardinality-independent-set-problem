@@ -5,6 +5,8 @@ import time
 import csv
 import os
 import itertools
+from pylab import Rectangle
+import matplotlib.patches as mpatches
 
 def float_to_str(float):
 	return '{:.2f}'.format(float)
@@ -80,6 +82,28 @@ class problem_instance(object):
 		if method == 'recursive_simplicial':
 			method_time_start = time.time()
 			simplicial_fixings, number_fixed = self.recursive_fixing()
+			simplicial_fixings = simplicial_fixings[1:]
+			simplicial_fixings = [element for sublist in simplicial_fixings for element in sublist]
+			#simplicial_fixings = simplicial_fixings[1:]
+			#print(simplicial_fixings)
+			#simplicial_fixings = list(set(simplicial_fixings))
+
+			#print(len(simplicial_fixings))
+			#print(simplicial_fixings)
+			#print(number_fixed)
+			#print("AAAAAAAAAa")
+			#flag = 0
+			 
+			# using set() + len()
+			# to check all unique list elements
+			#flag = len(set(simplicial_fixings)) == len(simplicial_fixings)
+			 
+			 
+			# printing result
+			#if(flag):
+			#	print("List contains all unique elements")
+			#else:
+			#	print("List contains does not contains all unique elements")
 			method_time_end = time.time()
 			
 			
@@ -105,7 +129,6 @@ class problem_instance(object):
 				for neighbor in self.graph.neighbors(fixing):
 					m._X[neighbor].ub = 0
 			method_time_end = time.time()
-			
 			self.method_time = float_to_str(method_time_end - method_time_start)
 			
 			self.number_of_simplicial_fixings = len(simplicial_fixings)
@@ -128,8 +151,8 @@ class problem_instance(object):
 
 		if method == 'recursive_simplicial':
 			if not relax:
-				self.lower_bound += number_fixed
-				self.upper_bound += number_fixed
+				self.lower_bound += self.number_of_simplicial_fixings
+				self.upper_bound += self.number_of_simplicial_fixings
 			self.graph = self.read_graph(self.filename)
 		self.total_time = float_to_str(end_time - start_time)
 		#self.method_time = float_to_str(method_time_end - method_time_start)
@@ -198,9 +221,19 @@ class problem_instance(object):
 
 		
 		nodes = list(self.graph.nodes())
-		pos = nx.spring_layout(self.graph, seed=1)  # positions for all nodes
+		removed_nodes = []
+		pos = nx.spring_layout(self.graph, seed=5)  # positions for all nodes
 
-		counter = 1
+		fig, axes = plt.subplots(nrows=4, ncols=1)
+		ax = axes.flatten()
+		#ax[0].title('super test')
+		ax[0].set_axis_off()
+		ax[1].set_axis_off()
+		ax[2].set_axis_off()
+		ax[3].set_axis_off()
+		counter = 0
+
+		#counter = 1
 		for fixed_nodes in simplicial_fixings:
 			neighbor_nodes = []
 			for node in fixed_nodes:
@@ -209,25 +242,29 @@ class problem_instance(object):
 						neighbor_nodes.append(potential_neighbor_node)
 				
 				nodes.remove(node)
+				removed_nodes.append(node)
 			#for node in neighbor_nodes:	
 			#	if node in nodes:
 			#		nodes.remove(node)
 
-			options = {"edgecolors": "tab:gray", "node_size": 30, "alpha": 0.9}
+			options = {"edgecolors": "tab:gray", "node_size": 120, "alpha": 0.9}
 
-			fig, axes = plt.subplots(nrows=2, ncols=1)
-			ax = axes.flatten()
-			plt.title('super test')
-			ax[0].set_axis_off()
-			ax[1].set_axis_off()
-			ax[0].set_title('Computing independent set of simplicials')
-			ax[1].set_title('Removing the independent set of simplicials and their neighbors')
+			
+			#ax[0].set_title('Computing independent set of simplicials')
+			#ax[1].set_title('Removing the independent set of simplicials and their neighbors')
 
-			nx.draw_networkx_nodes(nodes, pos, node_color="tab:blue", **options, ax=ax[0])
-			nx.draw_networkx_nodes(fixed_nodes, pos, node_color="tab:red", **options, ax=ax[0])
-			nx.draw_networkx_nodes(neighbor_nodes, pos, node_color="tab:olive", **options, ax=ax[0])
+			#nx.draw_networkx_nodes(self.graph, pos, node_color="tab:blue", **options, ax=ax[0])
+			if counter == 4:
+				break
+			nx.draw_networkx_nodes(nodes, pos, node_color="tab:blue", **options, ax=ax[counter])
+			nx.draw_networkx_nodes(fixed_nodes, pos, node_color="tab:red", **options, ax=ax[counter])
+			nx.draw_networkx_nodes(neighbor_nodes, pos, node_color="tab:olive", **options, ax=ax[counter])
+			
+
+			nx.draw_networkx_nodes(removed_nodes, pos, node_color="tab:olive", alpha=0.0, ax=ax[counter])
 			subgraph = self.graph.subgraph(nodes + fixed_nodes)
 			nx.draw_networkx_edges(subgraph, pos, width=1.0, alpha=0.5, ax=ax[0])
+
 			
 			plt.tight_layout()
 			#plt.axis("off",ax=ax[0])
@@ -239,20 +276,30 @@ class problem_instance(object):
 			for node in neighbor_nodes:
 				if node in nodes:
 					nodes.remove(node)
+					removed_nodes.append(node)
 
-			nx.draw_networkx_nodes(nodes, pos, node_color="tab:blue", **options, ax=ax[1])
+			nx.draw_networkx_nodes(nodes, pos, node_color="tab:blue", **options, ax=ax[counter+1])
 			#nx.draw_networkx_nodes(fixed_nodes, pos, node_color="tab:red", **options)
 			#nx.draw_networkx_nodes(neighbor_nodes, pos, node_color="tab:olive", **options)
+			nx.draw_networkx_nodes(removed_nodes, pos, node_color="tab:olive", alpha=0.0, ax=ax[counter+1])
 			subgraph = self.graph.subgraph(nodes)
-			nx.draw_networkx_edges(subgraph, pos, width=1.0, alpha=0.5, ax=ax[1])
+			nx.draw_networkx_edges(subgraph, pos, width=1.0, alpha=0.5, ax=ax[2])
+			nx.draw_networkx_edges(subgraph, pos, width=1.0, alpha=0.5, ax=ax[counter+1])
 			
 			plt.tight_layout()
 			#plt.axis("off",ax=ax[1])
 			#plt.title(self.filename + ' TWO')
 
 			#plt.show()
-			plt.savefig('images/' + self.filename[:-4] + '_iteration_' + str(counter) + '.png')
-			counter += 1
+			counter += 2
+		
+		#plt.savefig('images/' + self.filename[:-4] + '_iteration_' + str(counter) + '.png')
+		#plt.legend(['line1', 'line2', 'line3'], ['label1', 'label2', 'label3'])
+		blue_patch = mpatches.Patch(color='tab:blue', label='Node')
+		red_patch = mpatches.Patch(color='tab:red',  label='The red data')
+		yellow_patch = mpatches.Patch(color='tab:olive', label='The red data')
+		plt.legend(handles=[blue_patch, red_patch, yellow_patch])
+		plt.show()
 
 def float_to_str(float):
 	return '{:.2f}'.format(float)
@@ -292,7 +339,7 @@ for file in os.listdir('./data'):
 
 
 
-#input_files = ['soc-karate.mtx']
+input_files = ['soc-karate.mtx']
 
 
 
@@ -303,12 +350,14 @@ for input_file in input_files:
 	print('Instance name: ' + instance.filename)
 	#print(nx.is_directed(instance.graph))
 	
+	#print(nx.is_chordal(instance.graph))
 	#instance.plot_fixings()
 	instance.write_graph_info()
-	instance.calculate_results()
+	#instance.calculate_results()
 
-	#instance.compuete_maximum_independent_set(True, False)
-	
+
+	#instance.compuete_maximum_independent_set('recursive_simplicial', False)
+	#instance.compuete_maximum_independent_set('none', False)
 
 '''
 for input_file in input_files:
