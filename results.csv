@@ -50,3 +50,6 @@ web-Google.txt,recursive_simplicial,855911.0,855911.0,29989.0,15.71,11.75,827877
 soc-karate.mtx,none,20.0,20.0,20.5,0.00,0,0,0
 soc-karate.mtx,one_step_simplicial,20.0,20.0,20.0,0.00,0.00,12,1
 soc-karate.mtx,recursive_simplicial,32.0,32.0,2.0,0.00,0.00,30,3
+socfb-Northeastern19.mtx,recursive_simplicial,4455.0,4651.0,root_relaxation,10803.87,0.12,1459,4
+socfb-Syracuse56.mtx,recursive_simplicial,3734.0,3977.0,root_relaxation,10805.57,0.16,1273,5
+flickrEdges.txt,recursive_simplicial,56661.0,56794.0,root_relaxation,10819.87,2.07,7007,7
