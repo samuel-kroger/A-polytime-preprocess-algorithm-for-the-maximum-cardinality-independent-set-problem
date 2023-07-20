@@ -15,7 +15,7 @@ All of the data used in the paper is in the directory data. All images generated
 - results.csv contains all the computational results used in the paper.
 - optimal_solutions.csv and timed_out_instances.csv are just the contents of results.csv manually formatted for the paper.
 
-You can run replicate these results on your machine by cloning the repository and executing the following command
+You can replicate these results on your machine by cloning the repository and executing the following command
 
 ```
 .\comp_expermient.py
