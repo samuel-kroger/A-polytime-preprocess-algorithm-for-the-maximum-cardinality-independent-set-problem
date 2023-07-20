@@ -42,3 +42,11 @@ socfb-Northeastern19.mtx,none,3598.0,3799.0,6949.5,10804.43,0,0,0
 socfb-Northeastern19.mtx,one_step_simplicial,3599.0,3798.0,6835.0,10804.19,0.03,528,1
 socfb-Northeastern19.mtx,recursive_simplicial,4455.0,4651.0,6211.5,10803.72,0.12,1459,4
 socfb-Syracuse56.mtx,none,2921.0,3205.0,6833.0,10806.06,0,0,0
+socfb-Syracuse56.mtx,one_step_simplicial,2965.0,3204.0,6712.0,10806.25,0.03,450,1
+socfb-Syracuse56.mtx,recursive_simplicial,3736.0,3977.0,6190.0,10805.20,0.17,1273,5
+web-Google.txt,none,529138.0,529138.0,571227.0,101.18,0,0,0
+web-Google.txt,one_step_simplicial,529138.0,529138.0,543361.0,77.12,6.58,313816,1
+web-Google.txt,recursive_simplicial,855911.0,855911.0,29989.0,15.71,11.75,827877,24
+soc-karate.mtx,none,20.0,20.0,20.5,0.00,0,0,0
+soc-karate.mtx,one_step_simplicial,20.0,20.0,20.0,0.00,0.00,12,1
+soc-karate.mtx,recursive_simplicial,32.0,32.0,2.0,0.00,0.00,30,3
