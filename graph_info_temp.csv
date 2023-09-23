@@ -1,0 +1,14 @@
+Instance,number of nodes,number of edges,density
+facebook_combined.txt,4039,88234,0.01
+Wiki-Vote.graph.txt,7117,100763,0.00
+CA-CondMat.txt,23133,93439,0.00
+Brightkite_edges.txt,58228,214078,0.00
+Gowalla_edges.txt,196591,950327,0.00
+ca-citeseer.mtx,227320,814134,0.00
+com-dblp.ungraph.txt,317080,1049866,0.00
+web-Google.txt,875713,4322051,0.00
+com-youtube.ungraph.txt,1134890,2987624,0.00
+socfb-Syracuse56.mtx,13653,543982,0.01
+socfb-Northeastern19.mtx,13882,381934,0.00
+smallworld.graph.txt,100002,499999,0.00
+flickrEdges.txt,105938,2316948,0.00

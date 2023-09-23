@@ -1,0 +1,9 @@
+#/home/sam/work/simplicial_idea/comp_experiment.py
+# GMT Wed Sep 20 19:58:04 2023
+# 
+0 1 4
+1 2 6
+2 3
+3 4
+4
+6
