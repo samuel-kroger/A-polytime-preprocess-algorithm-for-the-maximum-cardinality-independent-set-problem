@@ -106,7 +106,8 @@ class problem_instance(object):
 		
 		
 		if lp_fixing:
-			
+			method_time_start = time.time()
+			self.number_of_simplicial_iterations += 1
 			lp_fixings = []
 			number_fixed = 0
 			index = 0
@@ -122,14 +123,9 @@ class problem_instance(object):
 
 			self.graph.remove_nodes_from(lp_fixings)
 			self.number_of_simplicial_fixings += len(lp_fixings)
-			print(len(lp_fixings))
-			print(len(lp_fixings))
-			print(len(lp_fixings))
-			print(len(lp_fixings))
-			print(len(lp_fixings))
-			print(obj_value_tracker)
-			
-			
+			method_time_end = time.time()
+			self.total_time += float_to_str(method_time_end - method_time_start)
+		
 
 
 			#return lp_fixings, number_fixed
@@ -143,7 +139,7 @@ class problem_instance(object):
 			method_time_end = time.time()
 			
 			
-			self.method_time = float_to_str(method_time_end - method_time_start)
+			self.method_time += method_time_end - method_time_start
 			
 			self.number_of_simplicial_fixings += number_fixed
 
@@ -163,7 +159,7 @@ class problem_instance(object):
 				for neighbor in self.graph.neighbors(fixing):
 					m._X[neighbor].ub = 0
 			method_time_end = time.time()
-			self.method_time = float_to_str(method_time_end - method_time_start)
+			self.method_time = method_time_end - method_time_start
 			
 			self.number_of_simplicial_fixings += len(simplicial_fixings)
 		
@@ -192,6 +188,7 @@ class problem_instance(object):
 			#	print(f"{v.VarName} = {v.X}")
 			self.relax_values = [v.x for v in m.getVars()]
 		self.total_time = float_to_str(end_time - start_time)
+		self.method_time = float_to_str(self.method_time)
 	
 	def recursive_fixing(self):
 		simplicial_fixings = ['while loop start']
@@ -223,19 +220,19 @@ class problem_instance(object):
 			
 	def make_row(self, method, lp_fixing=False):
 		
-		instance.get_root_relaxtaion(method)
+		instance.get_root_relaxtaion('none')
 		self.graph = self.read_graph(self.filename)
 		instance.compuete_maximum_independent_set(method, False, lp_fixing)
 		instance.write_results(method)
 		self.graph = self.read_graph(self.filename)
 
 	def calculate_results(self):
-		method = 'none'
-		self.make_row(method)
-		method = 'one_step_simplicial'
-		self.make_row(method)
-		method = 'recursive_simplicial'
-		self.make_row(method)
+		#method = 'none'
+		#self.make_row(method)
+		#method = 'one_step_simplicial'
+		#self.make_row(method)
+		#method = 'recursive_simplicial'
+		#self.make_row(method)
 		method = 'LP fixing only'
 		self.make_row(method, lp_fixing=True)
 		method = 'recursive_simplicial'
