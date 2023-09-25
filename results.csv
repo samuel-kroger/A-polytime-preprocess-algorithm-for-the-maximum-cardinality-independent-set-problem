@@ -24,3 +24,6 @@ soc-karate.mtx,recursive_simplicial,20.0,20.0,20.5,0.00,0.00,34,4
 socfb-Northeastern19.mtx,LP fixing only,3599.0,3798.0,6949.5,10804.17,0.00,719,1
 socfb-Northeastern19.mtx,recursive_simplicial,3603.0,3799.0,6949.5,10803.64,0.10,1459,5
 socfb-Syracuse56.mtx,LP fixing only,2930.0,3204.0,6833.0,10805.71,0.00,533,1
+socfb-Syracuse56.mtx,recursive_simplicial,2961.0,3204.0,6833.0,10805.32,0.13,1273,5
+web-Google.txt,LP fixing only,529138.0,529138.0,571227.0,18.72,0.00,660513,1
+web-Google.txt,recursive_simplicial,529138.0,529138.0,571227.0,5.30,2.65,860387,17
